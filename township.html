@@ -1,0 +1,1905 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4CAF50">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Township Transmigrasi">
+    
+    <title>Township Transmigrasi Indonesia</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏘️</text></svg>">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .screen {
+            display: none;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Main Menu */
+        .main-menu {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            margin: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .game-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #4CAF50, #FF9800);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .game-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .menu-btn {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            min-width: 200px;
+        }
+
+        .menu-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        /* Game Screen */
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: #f0f8ff;
+        }
+
+        .game-header {
+            background: linear-gradient(45deg, #4CAF50, #FF9800);
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Program Info Section */
+        .program-info-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 2px solid #4CAF50;
+            padding: 10px 20px;
+        }
+
+        .program-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .program-badge {
+            background: #4CAF50;
+            color: white;
+            border-radius: 15px;
+            padding: 10px 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            min-width: 300px;
+        }
+
+        .program-level {
+            font-size: 0.9rem;
+            font-weight: bold;
+            opacity: 0.9;
+        }
+
+        .program-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .program-slogan {
+            font-size: 0.8rem;
+            font-style: italic;
+            opacity: 0.8;
+        }
+
+        /* Special Resources */
+        .special-resources-section {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+        }
+
+        .special-resources {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+
+        .resource-item {
+            background: white;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            padding: 8px 12px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #2E7D32;
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
+        }
+
+        /* Mission Display */
+        .mission-section {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            background: linear-gradient(45deg, #fff3e0, #ffecb3);
+            max-height: 300px;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .mission-description {
+            font-size: 0.8rem;
+            color: #666;
+            margin: 8px 0;
+            line-height: 1.4;
+        }
+
+        .mission-objectives {
+            margin: 10px 0;
+        }
+
+        .mission-objective {
+            background: white;
+            border: 2px solid #FF9800;
+            border-radius: 8px;
+            padding: 8px;
+            margin: 6px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .mission-objective.completed {
+            border-color: #4CAF50;
+            background: #f1f8e9;
+        }
+
+        .objective-text {
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: #333;
+        }
+
+        .objective-progress {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .objective-progress .progress-bar {
+            flex: 1;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .objective-progress .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #FF9800, #FFC107);
+            transition: width 0.3s ease;
+        }
+
+        .mission-objective.completed .progress-fill {
+            background: linear-gradient(45deg, #4CAF50, #8BC34A);
+        }
+
+        .progress-text {
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: #666;
+            min-width: 40px;
+        }
+
+        .mission-rewards {
+            margin-top: 10px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+        }
+
+        .mission-rewards h4 {
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .reward-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .reward-item {
+            background: #4CAF50;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 15px;
+            flex: 1;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 8px;
+        }
+
+        .stat-item.time-season-indicator {
+            background: rgba(255, 215, 0, 0.3);
+        }
+
+        .stat-item.season-indicator {
+            background: rgba(76, 175, 80, 0.3);
+        }
+
+        .stat-icon {
+            font-size: 1.2rem;
+            margin-bottom: 2px;
+        }
+
+        .stat-value {
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 2px;
+            left: 2px;
+            right: 2px;
+            height: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 3px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+            z-index: 15;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, 
+                #4CAF50 0%, 
+                #8BC34A 50%, 
+                #CDDC39 100%);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+            box-shadow: 
+                0 0 4px rgba(76, 175, 80, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            animation: progress-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes progress-glow {
+            0%, 100% { box-shadow: 0 0 4px rgba(76, 175, 80, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3); }
+            50% { box-shadow: 0 0 8px rgba(76, 175, 80, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.5); }
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .restart-btn {
+            background: rgba(255, 152, 0, 0.8);
+        }
+
+        .restart-btn:hover {
+            background: rgba(255, 152, 0, 0.9);
+            transform: translateY(-2px);
+        }
+
+        .game-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .game-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .township-grid {
+            flex: 1;
+            display: grid;
+            gap: 1px;
+            padding: 20px;
+            background: 
+                /* Sky gradient */
+                linear-gradient(180deg, #87CEEB 0%, #98FB98 40%, #90EE90 100%),
+                /* Terrain texture */
+                radial-gradient(circle at 25% 25%, rgba(139, 69, 19, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(34, 139, 34, 0.1) 0%, transparent 50%);
+            background-size: 100% 100%, 200px 200px, 150px 150px;
+            border-radius: 15px;
+            margin: 10px;
+            overflow: auto;
+            border: 3px solid #4A5D23;
+            box-shadow: 
+                inset 0 0 30px rgba(139, 69, 19, 0.2),
+                0 8px 25px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .township-cell {
+            background: 
+                /* Grass texture */
+                linear-gradient(135deg, 
+                    #7CB342 0%, 
+                    #8BC34A 25%, 
+                    #9CCC65 50%, 
+                    #AED581 75%, 
+                    #8BC34A 100%),
+                /* Subtle pattern overlay */
+                repeating-linear-gradient(
+                    45deg,
+                    transparent 0px,
+                    rgba(255, 255, 255, 0.1) 1px,
+                    transparent 2px,
+                    transparent 12px
+                );
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: 45px;
+            position: relative;
+            border-radius: 4px;
+            box-shadow: 
+                inset 0 1px 3px rgba(255, 255, 255, 0.4),
+                inset 0 -1px 2px rgba(0, 0, 0, 0.1),
+                0 1px 3px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+            transform: perspective(1000px) rotateX(0deg);
+        }
+
+        .township-cell:hover {
+            background: 
+                linear-gradient(135deg, 
+                    #8BC34A 0%, 
+                    #9CCC65 25%, 
+                    #AED581 50%, 
+                    #C5E1A5 75%, 
+                    #9CCC65 100%);
+            transform: perspective(1000px) rotateX(2deg) scale(1.02);
+            box-shadow: 
+                inset 0 2px 4px rgba(255, 255, 255, 0.5),
+                inset 0 -2px 3px rgba(0, 0, 0, 0.15),
+                0 4px 12px rgba(76, 175, 80, 0.4),
+                0 2px 8px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        /* Township-style 3D elements */
+        .township-element {
+            font-size: 32px;
+            z-index: 15;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+            filter: 
+                drop-shadow(2px 4px 8px rgba(0, 0, 0, 0.3))
+                drop-shadow(0 0 4px rgba(255, 255, 255, 0.2));
+            text-shadow: 
+                1px 1px 2px rgba(0, 0, 0, 0.5),
+                0 0 8px rgba(255, 255, 255, 0.3);
+        }
+
+        .township-element:hover {
+            transform: 
+                perspective(1000px) 
+                rotateY(8deg) 
+                rotateX(5deg) 
+                scale(1.2) 
+                translateZ(10px);
+            filter: 
+                drop-shadow(4px 8px 16px rgba(0, 0, 0, 0.4))
+                drop-shadow(0 0 12px rgba(255, 255, 255, 0.4))
+                brightness(1.1);
+            z-index: 25;
+            text-shadow: 
+                2px 2px 4px rgba(0, 0, 0, 0.6),
+                0 0 12px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Township-style building effects with realistic materials */
+        .township-element[data-type="building"] {
+            background: 
+                /* Main building surface */
+                linear-gradient(135deg, 
+                    rgba(255, 255, 255, 0.6) 0%, 
+                    rgba(255, 255, 255, 0.2) 30%,
+                    transparent 50%,
+                    rgba(0, 0, 0, 0.1) 70%,
+                    rgba(0, 0, 0, 0.3) 100%),
+                /* Material texture */
+                radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4) 0%, transparent 50%);
+            border-radius: 15px;
+            padding: 6px;
+            box-shadow: 
+                /* Main shadow */
+                inset 3px 3px 8px rgba(255, 255, 255, 0.4),
+                inset -3px -3px 8px rgba(0, 0, 0, 0.3),
+                /* Outer glow */
+                0 6px 20px rgba(0, 0, 0, 0.4),
+                0 0 0 2px rgba(255, 255, 255, 0.1),
+                /* Depth shadow */
+                0 12px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .township-element[data-type="building"]::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: 
+                linear-gradient(45deg, 
+                    rgba(255, 255, 255, 0.3) 0%, 
+                    transparent 25%, 
+                    transparent 75%, 
+                    rgba(0, 0, 0, 0.2) 100%);
+            border-radius: 18px;
+            z-index: -1;
+            transition: all 0.3s ease;
+        }
+
+        .township-element[data-type="building"]:hover::before {
+            background: 
+                linear-gradient(45deg, 
+                    rgba(255, 255, 255, 0.5) 0%, 
+                    transparent 25%, 
+                    transparent 75%, 
+                    rgba(0, 0, 0, 0.3) 100%);
+            transform: scale(1.05);
+        }
+
+        /* Township-style crop effects with organic feel */
+        .township-element[data-type="crop"] {
+            background: 
+                /* Organic shape */
+                radial-gradient(ellipse 80% 60% at 40% 40%, rgba(255, 255, 255, 0.6) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 80% at 60% 60%, rgba(0, 0, 0, 0.1) 0%, transparent 50%),
+                /* Natural texture */
+                conic-gradient(from 45deg, 
+                    rgba(139, 195, 74, 0.3) 0deg,
+                    rgba(76, 175, 80, 0.3) 90deg,
+                    rgba(104, 159, 56, 0.3) 180deg,
+                    rgba(139, 195, 74, 0.3) 270deg,
+                    rgba(76, 175, 80, 0.3) 360deg);
+            border-radius: 50%;
+            padding: 4px;
+            box-shadow: 
+                inset 2px 2px 6px rgba(255, 255, 255, 0.5),
+                inset -2px -2px 6px rgba(0, 0, 0, 0.2),
+                0 3px 10px rgba(0, 0, 0, 0.3);
+            animation: organic-sway 6s ease-in-out infinite;
+        }
+
+        @keyframes organic-sway {
+            0%, 100% { 
+                transform: rotate(0deg) scale(1) perspective(1000px) rotateY(0deg); 
+                filter: drop-shadow(2px 4px 8px rgba(0, 0, 0, 0.3));
+            }
+            25% { 
+                transform: rotate(1.5deg) scale(1.03) perspective(1000px) rotateY(3deg); 
+                filter: drop-shadow(3px 6px 12px rgba(0, 0, 0, 0.4));
+            }
+            75% { 
+                transform: rotate(-1.2deg) scale(0.97) perspective(1000px) rotateY(-3deg); 
+                filter: drop-shadow(1px 2px 6px rgba(0, 0, 0, 0.2));
+            }
+        }
+
+        /* Professional building category styles */
+        .township-element.administrative {
+            background: 
+                linear-gradient(135deg, #D84315 0%, #FF5722 30%, #FF7043 60%, #FFAB91 100%),
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
+            box-shadow: 
+                inset 3px 3px 8px rgba(255, 171, 145, 0.5),
+                inset -3px -3px 8px rgba(139, 69, 19, 0.4),
+                0 8px 25px rgba(216, 67, 21, 0.5);
+        }
+
+        .township-element.community {
+            background: 
+                linear-gradient(135deg, #2E7D32 0%, #4CAF50 30%, #66BB6A 60%, #A5D6A7 100%),
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
+            box-shadow: 
+                inset 3px 3px 8px rgba(165, 214, 167, 0.5),
+                inset -3px -3px 8px rgba(46, 125, 50, 0.4),
+                0 8px 25px rgba(76, 175, 80, 0.5);
+        }
+
+        .township-element.education {
+            background: 
+                linear-gradient(135deg, #E65100 0%, #FF9800 30%, #FFB74D 60%, #FFCC02 100%),
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
+            box-shadow: 
+                inset 3px 3px 8px rgba(255, 204, 2, 0.5),
+                inset -3px -3px 8px rgba(230, 81, 0, 0.4),
+                0 8px 25px rgba(255, 152, 0, 0.5);
+        }
+
+        .township-element.industrial {
+            background: 
+                linear-gradient(135deg, #0D47A1 0%, #2196F3 30%, #64B5F6 60%, #BBDEFB 100%),
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
+            box-shadow: 
+                inset 3px 3px 8px rgba(187, 222, 251, 0.5),
+                inset -3px -3px 8px rgba(13, 71, 161, 0.4),
+                0 8px 25px rgba(33, 150, 243, 0.5);
+        }
+
+        .township-element.tourism {
+            background: 
+                linear-gradient(135deg, #006064 0%, #00BCD4 30%, #4DD0E1 60%, #B2EBF2 100%),
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
+            box-shadow: 
+                inset 3px 3px 8px rgba(178, 235, 242, 0.5),
+                inset -3px -3px 8px rgba(0, 96, 100, 0.4),
+                0 8px 25px rgba(0, 188, 212, 0.5);
+        }
+
+        .township-element.partnership {
+            background: 
+                linear-gradient(135deg, #4A148C 0%, #9C27B0 30%, #BA68C8 60%, #E1BEE7 100%),
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
+            box-shadow: 
+                inset 3px 3px 8px rgba(225, 190, 231, 0.5),
+                inset -3px -3px 8px rgba(74, 20, 140, 0.4),
+                0 8px 25px rgba(156, 39, 176, 0.5);
+        }
+
+        /* Professional harvest ready effect */
+        .township-element.ready-harvest {
+            background: 
+                linear-gradient(135deg, #FF6F00 0%, #FFD700 30%, #FFF176 60%, #FFFDE7 100%),
+                radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.7) 0%, transparent 50%);
+            box-shadow: 
+                inset 3px 3px 10px rgba(255, 253, 231, 0.8),
+                inset -3px -3px 10px rgba(255, 111, 0, 0.3),
+                0 0 25px rgba(255, 215, 0, 0.9),
+                0 8px 30px rgba(255, 193, 7, 0.7);
+            animation: professional-golden-pulse 2.5s ease-in-out infinite;
+        }
+
+        @keyframes professional-golden-pulse {
+            0%, 100% { 
+                transform: scale(1) perspective(1000px) rotateY(0deg);
+                box-shadow: 
+                    inset 3px 3px 10px rgba(255, 253, 231, 0.8),
+                    inset -3px -3px 10px rgba(255, 111, 0, 0.3),
+                    0 0 25px rgba(255, 215, 0, 0.9),
+                    0 8px 30px rgba(255, 193, 7, 0.7);
+            }
+            50% { 
+                transform: scale(1.15) perspective(1000px) rotateY(5deg);
+                box-shadow: 
+                    inset 4px 4px 12px rgba(255, 253, 231, 1),
+                    inset -4px -4px 12px rgba(255, 111, 0, 0.5),
+                    0 0 35px rgba(255, 215, 0, 1),
+                    0 12px 40px rgba(255, 193, 7, 0.9);
+            }
+        }
+
+        /* Professional progress bars */
+        .progress-bar {
+            position: absolute;
+            bottom: 4px;
+            left: 4px;
+            right: 4px;
+            height: 10px;
+            background: 
+                linear-gradient(180deg, 
+                    rgba(0, 0, 0, 0.6) 0%, 
+                    rgba(0, 0, 0, 0.8) 100%);
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 
+                inset 0 3px 6px rgba(0, 0, 0, 0.5),
+                0 1px 3px rgba(255, 255, 255, 0.3),
+                0 0 0 1px rgba(0, 0, 0, 0.3);
+            z-index: 20;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: 
+                linear-gradient(180deg, #A5D6A7 0%, #66BB6A 25%, #4CAF50 50%, #388E3C 75%, #2E7D32 100%),
+                linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%);
+            border-radius: 5px;
+            transition: width 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 
+                inset 0 1px 3px rgba(255, 255, 255, 0.5),
+                inset 0 -1px 3px rgba(0, 0, 0, 0.3),
+                0 0 10px rgba(76, 175, 80, 0.7);
+            position: relative;
+            animation: professional-progress-shine 4s ease-in-out infinite;
+        }
+
+        @keyframes professional-progress-shine {
+            0%, 100% { 
+                box-shadow: 
+                    inset 0 1px 3px rgba(255, 255, 255, 0.5),
+                    inset 0 -1px 3px rgba(0, 0, 0, 0.3),
+                    0 0 10px rgba(76, 175, 80, 0.7);
+            }
+            50% { 
+                box-shadow: 
+                    inset 0 2px 4px rgba(255, 255, 255, 0.7),
+                    inset 0 -2px 4px rgba(0, 0, 0, 0.4),
+                    0 0 15px rgba(76, 175, 80, 0.9);
+            }
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255, 255, 255, 0.8) 50%, 
+                transparent 100%);
+            animation: professional-progress-sweep 3s ease-in-out infinite;
+        }
+
+        @keyframes professional-progress-sweep {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Professional UI elements */
+        .stat-item {
+            text-align: center;
+            background: 
+                linear-gradient(135deg, 
+                    rgba(255, 255, 255, 0.9) 0%, 
+                    rgba(255, 255, 255, 0.7) 50%,
+                    rgba(255, 255, 255, 0.5) 100%);
+            border-radius: 12px;
+            padding: 10px;
+            box-shadow: 
+                inset 0 1px 3px rgba(255, 255, 255, 0.5),
+                inset 0 -1px 2px rgba(0, 0, 0, 0.1),
+                0 3px 10px rgba(0, 0, 0, 0.2),
+                0 0 0 1px rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-item:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 
+                inset 0 2px 4px rgba(255, 255, 255, 0.6),
+                inset 0 -2px 3px rgba(0, 0, 0, 0.15),
+                0 6px 20px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.4);
+        }
+
+        .stat-icon {
+            font-size: 1.4rem;
+            margin-bottom: 4px;
+            text-shadow: 
+                1px 1px 2px rgba(0, 0, 0, 0.3),
+                0 0 4px rgba(255, 255, 255, 0.5);
+            filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.2));
+        }
+
+        .stat-value {
+            font-weight: bold;
+            font-size: 1rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            color: #2E7D32;
+        }
+
+        /* Enhanced environmental effects */
+        .township-grid::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                /* Atmospheric perspective */
+                radial-gradient(ellipse 80% 60% at 20% 80%, rgba(135, 206, 235, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 40% at 80% 20%, rgba(255, 215, 0, 0.05) 0%, transparent 40%),
+                /* Cloud shadows */
+                radial-gradient(ellipse 300px 150px at 30% 40%, rgba(0, 0, 0, 0.08) 0%, transparent 70%),
+                radial-gradient(ellipse 200px 100px at 70% 70%, rgba(0, 0, 0, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 1;
+            animation: atmospheric-movement 20s ease-in-out infinite;
+        }
+
+        @keyframes atmospheric-movement {
+            0%, 100% { 
+                opacity: 0.8; 
+                transform: translateX(0px) translateY(0px);
+            }
+            25% { 
+                opacity: 1; 
+                transform: translateX(15px) translateY(-5px);
+            }
+            50% { 
+                opacity: 0.9; 
+                transform: translateX(8px) translateY(10px);
+            }
+            75% { 
+                opacity: 0.95; 
+                transform: translateX(-10px) translateY(-3px);
+            }
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .game-content {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: 250px;
+                max-height: 250px;
+                border-left: none;
+                border-top: 2px solid #4CAF50;
+                order: 2;
+            }
+
+            .mission-section {
+                max-height: 150px;
+                padding: 10px;
+            }
+
+            .mission-description {
+                font-size: 0.7rem;
+                margin: 4px 0;
+            }
+
+            .mission-objective {
+                padding: 6px;
+                margin: 4px 0;
+            }
+
+            .objective-text {
+                font-size: 0.7rem;
+            }
+
+            .progress-text {
+                font-size: 0.6rem;
+            }
+
+            .mission-rewards h4 {
+                font-size: 0.7rem;
+            }
+
+            .reward-item {
+                font-size: 0.6rem;
+                padding: 1px 4px;
+            }
+
+            .game-main {
+                order: 1;
+                min-height: 400px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .stat-item {
+                padding: 5px;
+            }
+
+            .township-grid {
+                margin: 5px;
+                padding: 5px;
+            }
+
+            .township-cell {
+                min-height: 30px;
+            }
+
+            .element-icon {
+                font-size: 1.2rem;
+            }
+
+            .toolbar-items {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 5px;
+            }
+
+            .tool-btn {
+                padding: 8px 4px;
+            }
+
+            .tool-icon {
+                font-size: 1.2rem;
+            }
+
+            .tool-name {
+                font-size: 0.7rem;
+            }
+
+            .toolbar-section {
+                min-height: 100px;
+                padding: 10px;
+            }
+        }
+
+        /* Cursor styles */
+        .cursor-residential {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><text y="24" font-size="24">🏠</text></svg>'), auto;
+        }
+
+        .cursor-farming {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><text y="24" font-size="24">🌾</text></svg>'), auto;
+        }
+
+        .cursor-industrial {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><text y="24" font-size="24">🏭</text></svg>'), auto;
+        }
+
+        .cursor-crop {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><text y="24" font-size="24">🌱</text></svg>'), auto;
+        }
+
+        /* Restart Confirmation Modal */
+        .restart-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .restart-modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .restart-modal h3 {
+            color: #FF5722;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .restart-modal p {
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .restart-modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .restart-confirm-btn {
+            background: linear-gradient(45deg, #FF5722, #FF7043);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .restart-confirm-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
+        }
+
+        .restart-cancel-btn {
+            background: linear-gradient(45deg, #607D8B, #78909C);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .restart-cancel-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(96, 125, 139, 0.4);
+        }
+
+        /* Additional Township-Style Professional Enhancements */
+        
+        /* Sidebar with Township-style design */
+        .sidebar {
+            width: 300px;
+            background: 
+                linear-gradient(135deg, 
+                    rgba(255, 255, 255, 0.95) 0%, 
+                    rgba(248, 249, 250, 0.9) 50%,
+                    rgba(233, 236, 239, 0.85) 100%);
+            border-left: 3px solid #4CAF50;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            max-height: 100vh;
+            box-shadow: 
+                inset 1px 0 3px rgba(255, 255, 255, 0.5),
+                -5px 0 20px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Professional inventory section */
+        .inventory-section {
+            padding: 20px;
+            border-bottom: 2px solid rgba(76, 175, 80, 0.2);
+            background: 
+                linear-gradient(135deg, 
+                    rgba(255, 255, 255, 0.8) 0%, 
+                    rgba(248, 249, 250, 0.6) 100%);
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2E7D32;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            padding: 8px 12px;
+            background: 
+                linear-gradient(135deg, 
+                    rgba(76, 175, 80, 0.1) 0%, 
+                    rgba(139, 195, 74, 0.05) 100%);
+            border-radius: 8px;
+            border: 1px solid rgba(76, 175, 80, 0.2);
+        }
+
+        /* Enhanced inventory grid */
+        .township-inventory {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .inventory-item {
+            background: 
+                linear-gradient(135deg, 
+                    rgba(255, 255, 255, 0.9) 0%, 
+                    rgba(248, 249, 250, 0.7) 100%);
+            border: 2px solid rgba(233, 236, 239, 0.8);
+            border-radius: 12px;
+            padding: 12px 8px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                inset 0 1px 3px rgba(255, 255, 255, 0.5),
+                0 2px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .inventory-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(76, 175, 80, 0.2) 50%, 
+                transparent 100%);
+            transition: left 0.5s ease;
+        }
+
+        .inventory-item:hover {
+            border-color: #4CAF50;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 
+                inset 0 2px 4px rgba(255, 255, 255, 0.6),
+                0 8px 25px rgba(76, 175, 80, 0.3);
+        }
+
+        .inventory-item:hover::before {
+            left: 100%;
+        }
+
+        .item-icon {
+            font-size: 1.4rem;
+            margin-bottom: 6px;
+            text-shadow: 
+                1px 1px 2px rgba(0, 0, 0, 0.2),
+                0 0 4px rgba(255, 255, 255, 0.5);
+            filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.1));
+        }
+
+        .item-quantity {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #2E7D32;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            background: 
+                linear-gradient(135deg, 
+                    rgba(76, 175, 80, 0.1) 0%, 
+                    rgba(139, 195, 74, 0.05) 100%);
+            padding: 2px 6px;
+            border-radius: 6px;
+            border: 1px solid rgba(76, 175, 80, 0.2);
+        }
+
+        /* Professional toolbar section */
+        .toolbar-section {
+            padding: 20px;
+            border-bottom: 2px solid rgba(76, 175, 80, 0.2);
+            min-height: 250px;
+            flex-shrink: 0;
+            background: 
+                linear-gradient(135deg, 
+                    rgba(255, 255, 255, 0.8) 0%, 
+                    rgba(248, 249, 250, 0.6) 100%);
+        }
+
+        .toolbar-items {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        /* Enhanced tool buttons */
+        .tool-btn {
+            background: 
+                linear-gradient(135deg, 
+                    rgba(255, 255, 255, 0.9) 0%, 
+                    rgba(248, 249, 250, 0.7) 50%,
+                    rgba(233, 236, 239, 0.5) 100%);
+            border: 2px solid rgba(222, 226, 230, 0.8);
+            border-radius: 15px;
+            padding: 15px 10px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                inset 0 1px 3px rgba(255, 255, 255, 0.5),
+                0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .tool-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(76, 175, 80, 0.1) 50%, 
+                transparent 100%);
+            transition: left 0.5s ease;
+        }
+
+        .tool-btn:hover:not(.locked) {
+            border-color: #4CAF50;
+            transform: translateY(-3px) scale(1.05);
+            background: 
+                linear-gradient(135deg, 
+                    rgba(232, 245, 232, 0.9) 0%, 
+                    rgba(212, 244, 212, 0.7) 100%);
+            box-shadow: 
+                inset 0 2px 4px rgba(255, 255, 255, 0.6),
+                0 8px 25px rgba(76, 175, 80, 0.3);
+        }
+
+        .tool-btn:hover:not(.locked)::before {
+            left: 100%;
+        }
+
+        .tool-btn.selected {
+            border-color: #4CAF50;
+            background: 
+                linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            box-shadow: 
+                inset 0 2px 4px rgba(255, 255, 255, 0.3),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.2),
+                0 8px 25px rgba(76, 175, 80, 0.5);
+        }
+
+        .tool-btn.locked {
+            opacity: 0.6;
+            cursor: not-allowed;
+            filter: grayscale(0.5);
+        }
+
+        .tool-icon {
+            font-size: 1.8rem;
+            margin-bottom: 6px;
+            text-shadow: 
+                1px 1px 2px rgba(0, 0, 0, 0.2),
+                0 0 4px rgba(255, 255, 255, 0.5);
+            filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.1));
+        }
+
+        .tool-name {
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .tool-cost {
+            font-size: 0.8rem;
+            color: #FF9800;
+            margin-top: 4px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .tool-lock {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: 
+                linear-gradient(135deg, #FF5722 0%, #D84315 100%);
+            color: white;
+            font-size: 0.7rem;
+            padding: 3px 6px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            box-shadow: 
+                inset 0 1px 2px rgba(255, 255, 255, 0.3),
+                0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Professional modals */
+        .production-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: 
+                linear-gradient(135deg, 
+                    rgba(255, 255, 255, 0.95) 0%, 
+                    rgba(248, 249, 250, 0.9) 100%);
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 450px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.3),
+                inset 0 1px 3px rgba(255, 255, 255, 0.5);
+            border: 2px solid rgba(76, 175, 80, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .production-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .production-btn {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border: 2px solid rgba(222, 226, 230, 0.8);
+            border-radius: 15px;
+            background: 
+                linear-gradient(135deg, 
+                    rgba(255, 255, 255, 0.9) 0%, 
+                    rgba(248, 249, 250, 0.7) 100%);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                inset 0 1px 3px rgba(255, 255, 255, 0.5),
+                0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .production-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(76, 175, 80, 0.1) 50%, 
+                transparent 100%);
+            transition: left 0.5s ease;
+        }
+
+        .production-btn:hover:not(.disabled) {
+            border-color: #4CAF50;
+            background: 
+                linear-gradient(135deg, 
+                    rgba(232, 245, 232, 0.9) 0%, 
+                    rgba(212, 244, 212, 0.7) 100%);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 
+                inset 0 2px 4px rgba(255, 255, 255, 0.6),
+                0 8px 25px rgba(76, 175, 80, 0.3);
+        }
+
+        .production-btn:hover:not(.disabled)::before {
+            left: 100%;
+        }
+
+        .production-btn.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            filter: grayscale(0.5);
+        }
+
+        .product-icon {
+            font-size: 1.8rem;
+            text-shadow: 
+                1px 1px 2px rgba(0, 0, 0, 0.2),
+                0 0 4px rgba(255, 255, 255, 0.5);
+            filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.1));
+        }
+
+        .product-name {
+            font-weight: bold;
+            flex: 1;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            color: #2E7D32;
+        }
+
+        .product-ingredients {
+            font-size: 0.85rem;
+            color: #666;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-time {
+            font-size: 0.85rem;
+            color: #FF9800;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-close {
+            background: 
+                linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            box-shadow: 
+                inset 0 2px 4px rgba(255, 255, 255, 0.3),
+                0 4px 15px rgba(76, 175, 80, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                inset 0 2px 4px rgba(255, 255, 255, 0.4),
+                0 6px 20px rgba(76, 175, 80, 0.5);
+        }
+
+        /* Professional notifications */
+        .township-notification {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            background: 
+                linear-gradient(135deg, 
+                    rgba(255, 255, 255, 0.95) 0%, 
+                    rgba(248, 249, 250, 0.9) 100%);
+            border-left: 5px solid #4CAF50;
+            border-radius: 12px;
+            padding: 18px 25px;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.2),
+                inset 0 1px 3px rgba(255, 255, 255, 0.5);
+            z-index: 1001;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 350px;
+            backdrop-filter: blur(10px);
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+        .township-notification.show {
+            transform: translateX(0);
+        }
+
+        .township-notification.success {
+            border-left-color: #4CAF50;
+        }
+
+        .township-notification.error {
+            border-left-color: #f44336;
+        }
+
+        .township-notification.warning {
+            border-left-color: #FF9800;
+        }
+
+        .township-notification.info {
+            border-left-color: #2196F3;
+        }
+
+        /* Professional celebration effects */
+        .township-celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            overflow: hidden;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: professional-fall 4s linear infinite;
+            box-shadow: 
+                0 0 6px rgba(255, 255, 255, 0.8),
+                inset 0 1px 2px rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes professional-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg) scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(50vh) rotate(180deg) scale(1.2);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg) scale(0.8);
+                opacity: 0;
+            }
+        }
+
+        /* Enhanced particle effects */
+        .particle-effect {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, #FFD700 0%, #FFA500 100%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particle-float 3s ease-out forwards;
+            box-shadow: 
+                0 0 8px rgba(255, 215, 0, 0.8),
+                inset 0 1px 2px rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes particle-float {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-50px) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* Professional loading animations */
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(76, 175, 80, 0.2);
+            border-top: 4px solid #4CAF50;
+            border-radius: 50%;
+            animation: professional-spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes professional-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Enhanced responsive design */
+        @media (max-width: 768px) {
+            .township-grid {
+                padding: 10px;
+                margin: 5px;
+            }
+            
+            .township-cell {
+                min-height: 35px;
+            }
+            
+            .township-element {
+                font-size: 24px;
+            }
+            
+            .sidebar {
+                width: 250px;
+            }
+            
+            .toolbar-items {
+                grid-template-columns: 1fr;
+            }
+            
+            .township-inventory {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Professional accessibility enhancements */
+        .township-element:focus,
+        .tool-btn:focus,
+        .production-btn:focus {
+            outline: 3px solid rgba(76, 175, 80, 0.6);
+            outline-offset: 2px;
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            .township-cell {
+                border-width: 2px;
+            }
+            
+            .township-element {
+                filter: contrast(1.5);
+            }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            .township-element,
+            .tool-btn,
+            .production-btn,
+            .inventory-item {
+                animation: none;
+                transition: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Menu Screen -->
+    <div id="mainMenu" class="screen active">
+        <div class="main-menu">
+            <h1 class="game-title">🏘️ Township</h1>
+            <h2 class="game-subtitle">Transmigrasi Indonesia</h2>
+            <p style="margin-bottom: 30px; color: #666;">Bangun kota impian Anda dengan bertani, membangun, dan berproduksi!</p>
+            
+            <button class="menu-btn" onclick="debugStartGame()">
+                🎮 Mulai Bermain
+            </button>
+            
+            <button class="menu-btn" onclick="restartGame()">
+                🔄 Restart Game
+            </button>
+            
+            <button class="menu-btn" onclick="showInstructions()">
+                📚 Cara Bermain
+            </button>
+            
+            <button class="menu-btn" onclick="showAbout()">
+                ℹ️ Tentang Game
+            </button>
+        </div>
+    </div>
+
+    <!-- Instructions Screen -->
+    <div id="instructionsScreen" class="screen">
+        <div class="main-menu">
+            <h2 class="game-title">📚 Cara Bermain</h2>
+            
+            <div style="text-align: left; margin: 20px 0;">
+                <h3>🎯 Tujuan:</h3>
+                <p>Bangun kawasan transmigrasi yang berkembang melalui 5 level program pembangunan Indonesia, dari menyelesaikan masalah lahan hingga kemitraan gotong royong.</p>
+                
+                <h3>📊 5 Level Program:</h3>
+                <p><strong>Level 1 - Trans Tuntas (T²):</strong> "Tuntas Lahan, Tuntas Harapan"<br>
+                Selesaikan sengketa lahan dan terbitkan sertifikat untuk kepastian hukum.</p>
+                
+                <p><strong>Level 2 - Translok:</strong> "Dari Lokal, Maju Global"<br>
+                Kembangkan potensi lokal dan bangun infrastruktur masyarakat setempat.</p>
+                
+                <p><strong>Level 3 - Transmigrasi Patriot:</strong> "Patriot Berkarya, Bangsa Berjaya"<br>
+                Latih kader pembangunan dan ciptakan unit usaha komunitas mandiri.</p>
+                
+                <p><strong>Level 4 - Trans Karya Nusa:</strong> "Kawasan Berkarya, Nusantara Berdaya"<br>
+                Bangun sentra ekonomi, industri, dan pariwisata untuk daya saing global.</p>
+                
+                <p><strong>Level 5 - Trans Gotong Royong:</strong> "Bangun Bersama, Sejahtera Semua"<br>
+                Ciptakan kemitraan multi-pihak untuk pembangunan berkelanjutan.</p>
+                
+                <h3>🎮 Gameplay:</h3>
+                <p>• Bangun fasilitas sesuai level program yang terbuka<br>
+                • Tanam dan panen berbagai komoditas Indonesia<br>
+                • Produksi barang dari bahan mentah<br>
+                • Kelola sumber daya khusus setiap program<br>
+                • Tingkatkan level untuk membuka fitur baru</p>
+            </div>
+            
+            <button class="menu-btn" onclick="showTownshipScreen('mainMenu')">
+                ⬅️ Kembali
+            </button>
+        </div>
+    </div>
+
+    <!-- About Screen -->
+    <div id="aboutScreen" class="screen">
+        <div class="main-menu">
+            <h2 class="game-title">ℹ️ Tentang Game</h2>
+            
+            <div style="text-align: left; margin: 20px 0;">
+                <p><strong>Township Transmigrasi Indonesia</strong> adalah game simulasi pembangunan kawasan transmigrasi yang mengikuti 5 program strategis pemerintah Indonesia.</p>
+                
+                <h3>🏛️ Program Transmigrasi Indonesia:</h3>
+                <p>Game ini dirancang berdasarkan program nyata Kementerian Desa, Pembangunan Daerah Tertinggal, dan Transmigrasi Republik Indonesia:</p>
+                
+                <p><strong>T² (Trans Tuntas)</strong> - Penyelesaian masalah lahan dan sertifikasi<br>
+                <strong>Translok</strong> - Pengembangan ekonomi lokal tanpa migrasi jauh<br>
+                <strong>Transmigrasi Patriot</strong> - Pengembangan SDM dan kader pembangunan<br>
+                <strong>Trans Karya Nusa</strong> - Penciptaan sentra ekonomi dan industri<br>
+                <strong>Trans Gotong Royong</strong> - Kemitraan multi-pihak berkelanjutan</p>
+                
+                <h3>🌾 Fitur Khusus:</h3>
+                <p>• Tanaman dan produk khas Indonesia<br>
+                • Sistem sumber daya sesuai program transmigrasi<br>
+                • Mekanisme pembangunan bertahap dan realistis<br>
+                • Tema budaya dan kearifan lokal Indonesia<br>
+                • Progressive Web App untuk pengalaman mobile optimal</p>
+                
+                <h3>🎯 Tujuan Edukasi:</h3>
+                <p>Mengedukasi masyarakat tentang program transmigrasi Indonesia dan pentingnya pembangunan kawasan yang berkelanjutan, mandiri, dan berbasis kemitraan.</p>
+            </div>
+            
+            <button class="menu-btn" onclick="showTownshipScreen('mainMenu')">
+                ⬅️ Kembali
+            </button>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="gameScreen" class="screen">
+        <div class="game-container">
+            <header class="game-header">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-value" id="townshipLevel">1</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="townshipExpBar"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-value" id="townshipCoins">2000</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-value" id="townshipPopulation">25</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-icon">😊</div>
+                        <div class="stat-value" id="townshipHappiness">70</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="townshipHappinessBar"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-icon">📈</div>
+                        <div class="stat-value" id="townshipExperience">0/100</div>
+                    </div>
+                    
+                    <div class="stat-item time-season-indicator">
+                        <div class="stat-icon" id="timeIcon">🌅</div>
+                        <div class="stat-value" id="gameTime">08:00</div>
+                    </div>
+                    
+                    <div class="stat-item season-indicator">
+                        <div class="stat-icon" id="seasonIcon">🌸</div>
+                        <div class="stat-value" id="gameSeason">Semi</div>
+                    </div>
+                </div>
+                
+                <button class="back-btn" onclick="backToMainMenu()">
+                    ⬅️ Menu
+                </button>
+                
+                <button class="back-btn restart-btn" onclick="confirmRestart()" style="margin-left: 10px;">
+                    🔄 Restart
+                </button>
+            </header>
+
+            <!-- Program Info Section -->
+            <div class="program-info-section">
+                <div id="programInfo" class="program-info">
+                    <!-- Program badge will be generated here -->
+                </div>
+            </div>
+
+            <div class="game-content">
+                <main class="game-main">
+                    <div id="townshipGrid" class="township-grid">
+                        <!-- Game grid will be generated here -->
+                    </div>
+                </main>
+
+                <aside class="sidebar">
+                    <div class="inventory-section">
+                        <h3 class="section-title">
+                            📦 Inventori
+                        </h3>
+                        <div id="townshipInventory" class="township-inventory">
+                            <!-- Inventory items will be generated here -->
+                        </div>
+                    </div>
+
+                    <!-- Special Resources Section -->
+                    <div class="special-resources-section">
+                        <h3 class="section-title">
+                            🏆 Sumber Daya Khusus
+                        </h3>
+                        <div id="specialResources" class="special-resources">
+                            <!-- Special resources will be generated here -->
+                        </div>
+                    </div>
+
+                    <div id="townshipToolbar" class="toolbar-section">
+                        <h3 class="section-title">
+                            🛠️ Alat
+                        </h3>
+                        <!-- Toolbar will be generated here -->
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+
+    <script src="township-game.js"></script>
+    <script>
+        // Debug function to check if everything loads properly
+        window.addEventListener('load', function() {
+            console.log('Page loaded');
+            console.log('TownshipGame class available:', typeof TownshipGame !== 'undefined');
+            console.log('startTownshipGame function available:', typeof startTownshipGame !== 'undefined');
+        });
+
+        function showInstructions() {
+            console.log('Show instructions clicked');
+            showTownshipScreen('instructionsScreen');
+        }
+
+        function showAbout() {
+            console.log('Show about clicked');
+            showTownshipScreen('aboutScreen');
+        }
+
+        // Add debugging to the start button
+        function debugStartGame() {
+            console.log('Start game button clicked');
+            try {
+                startTownshipGame();
+                console.log('Game started successfully');
+            } catch (error) {
+                console.error('Error starting game:', error);
+                alert('Error starting game: ' + error.message);
+            }
+        }
+
+        // Restart game functions
+        function restartGame() {
+            console.log('Restart game from main menu');
+            showRestartModal(function() {
+                clearGameData();
+                debugStartGame();
+            });
+        }
+
+        function confirmRestart() {
+            console.log('Restart game from in-game');
+            showRestartModal(function() {
+                clearGameData();
+                if (game) {
+                    game.save();
+                    clearInterval(game.gameTimer);
+                }
+                debugStartGame();
+            });
+        }
+
+        function showRestartModal(onConfirm) {
+            const modal = document.createElement('div');
+            modal.className = 'restart-modal';
+            modal.innerHTML = `
+                <div class="restart-modal-content">
+                    <h3>🔄 Restart Game</h3>
+                    <p>Apakah Anda yakin ingin memulai game baru?<br>
+                    <strong>Semua progress akan hilang dan tidak dapat dikembalikan!</strong></p>
+                    <div class="restart-modal-buttons">
+                        <button class="restart-cancel-btn" onclick="closeRestartModal()">
+                            ❌ Batal
+                        </button>
+                        <button class="restart-confirm-btn" onclick="executeRestart()">
+                            ✅ Ya, Restart
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Store callback function globally for access
+            window.restartCallback = onConfirm;
+        }
+
+        function closeRestartModal() {
+            const modal = document.querySelector('.restart-modal');
+            if (modal) {
+                modal.remove();
+            }
+            window.restartCallback = null;
+        }
+
+        function executeRestart() {
+            if (window.restartCallback) {
+                window.restartCallback();
+            }
+            closeRestartModal();
+        }
+
+        function clearGameData() {
+            console.log('Clearing game data');
+            localStorage.removeItem('townshipTransmigrasi');
+            if (game) {
+                clearInterval(game.gameTimer);
+                game = null;
+            }
+        }
+
+        // Register service worker if available
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
+</body>
+</html> 

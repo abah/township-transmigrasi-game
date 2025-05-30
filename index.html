@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Transmigrasi Game">
+    <meta name="description" content="Game edukatif interaktif tentang program transmigrasi Indonesia dengan 5 level pembelajaran yang menarik">
+    <meta name="keywords" content="transmigrasi, indonesia, game edukatif, pembelajaran, strategi">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9InVybCgjZ3JhZGllbnQwX2xpbmVhcl8xXzEpIi8+CjxwYXRoIGQ9Ik05NiA0OEw2NCA4MEw5NiAxMTJMMTI4IDgwTDk2IDQ4WiIgZmlsbD0id2hpdGUiLz4KPHA+dGggZD0iTTQ4IDEyOEw4MCA5NkwxMTIgMTI4TDgwIDE2MEw0OCAxMjhaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTQ0IDEyOEwxMTIgOTZMMTQ0IDY0TDE3NiA5NkwxNDQgMTI4WiIgZmlsbD0id2hpdGUiLz4KPGR1ZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0iZ3JhZGllbnQwX2xpbmVhcl8xXzEiIHgxPSIwIiB5MT0iMCIgeDI9IjE5MiIgeTI9IjE5MiIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgo8c3RvcCBzdG9wLWNvbG9yPSIjNjY3ZWVhIi8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzc2NGJhMiIvPgo8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+Cjwvc3ZnPgo=">
+    
+    <title>Game Transmigrasi Indonesia - Membangun Nusantara</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" as="style">
+    <link rel="preload" href="game.js" as="script">
+</head>
+<body>
+    <div id="gameContainer" role="main">
+        <!-- Main Menu -->
+        <div id="mainMenu" class="screen active" role="dialog" aria-labelledby="main-title">
+            <div class="menu-content">
+                <h1 class="game-title" id="main-title">
+                    <i class="fas fa-map-marked-alt" aria-hidden="true"></i>
+                    Game Transmigrasi Indonesia
+                </h1>
+                <p class="game-subtitle">Membangun Indonesia dari Desa ke Kota</p>
+                
+                <nav class="menu-buttons" role="navigation" aria-label="Menu utama">
+                    <button class="btn btn-primary" onclick="startGame()" aria-describedby="start-desc">
+                        <i class="fas fa-play" aria-hidden="true"></i> Mulai Permainan
+                    </button>
+                    <span id="start-desc" class="sr-only">Mulai bermain game transmigrasi Indonesia</span>
+                    
+                    <button class="btn btn-secondary" onclick="showInstructions()" aria-describedby="instructions-desc">
+                        <i class="fas fa-book" aria-hidden="true"></i> Cara Bermain
+                    </button>
+                    <span id="instructions-desc" class="sr-only">Pelajari cara bermain game</span>
+                    
+                    <button class="btn btn-secondary" onclick="showAbout()" aria-describedby="about-desc">
+                        <i class="fas fa-info-circle" aria-hidden="true"></i> Tentang Game
+                    </button>
+                    <span id="about-desc" class="sr-only">Informasi tentang game transmigrasi</span>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Instructions Screen -->
+        <div id="instructionsScreen" class="screen" role="dialog" aria-labelledby="instructions-title">
+            <div class="screen-content">
+                <h2 id="instructions-title"><i class="fas fa-book" aria-hidden="true"></i> Cara Bermain</h2>
+                <div class="instructions-content">
+                    <div class="instruction-item">
+                        <h3>🎯 Tujuan Game</h3>
+                        <p>Selesaikan 5 level program transmigrasi untuk membangun Indonesia yang lebih maju dan merata.</p>
+                    </div>
+                    <div class="instruction-item">
+                        <h3>🎮 Cara Bermain</h3>
+                        <ul>
+                            <li>Setiap level memiliki misi dan tantangan berbeda</li>
+                            <li>Kumpulkan poin dengan menyelesaikan tugas</li>
+                            <li>Kelola sumber daya dengan bijak</li>
+                            <li>Buat keputusan strategis untuk kemajuan kawasan</li>
+                        </ul>
+                    </div>
+                    <div class="instruction-item">
+                        <h3>📊 Sistem Penilaian</h3>
+                        <ul>
+                            <li>⭐ 1 Bintang: 60-79 poin</li>
+                            <li>⭐⭐ 2 Bintang: 80-89 poin</li>
+                            <li>⭐⭐⭐ 3 Bintang: 90-100 poin</li>
+                        </ul>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="backToMenu()" aria-label="Kembali ke menu utama">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i> Kembali
+                </button>
+            </div>
+        </div>
+
+        <!-- About Screen -->
+        <div id="aboutScreen" class="screen" role="dialog" aria-labelledby="about-title">
+            <div class="screen-content">
+                <h2 id="about-title"><i class="fas fa-info-circle" aria-hidden="true"></i> Tentang Game</h2>
+                <div class="about-content">
+                    <p>Game Transmigrasi Indonesia adalah permainan edukatif yang mengajarkan konsep-konsep pembangunan kawasan transmigrasi di Indonesia.</p>
+                    
+                    <h3>5 Level Program Transmigrasi:</h3>
+                    <div class="level-preview" role="list">
+                        <div class="level-item" role="listitem">
+                            <span class="level-number" aria-label="Level 1">1</span>
+                            <div>
+                                <h4>Trans Tuntas (T²)</h4>
+                                <p>"Tuntas Lahan, Tuntas Harapan"</p>
+                            </div>
+                        </div>
+                        <div class="level-item" role="listitem">
+                            <span class="level-number" aria-label="Level 2">2</span>
+                            <div>
+                                <h4>Transmigrasi Lokal (Translok)</h4>
+                                <p>"Dari Lokal, Maju Global"</p>
+                            </div>
+                        </div>
+                        <div class="level-item" role="listitem">
+                            <span class="level-number" aria-label="Level 3">3</span>
+                            <div>
+                                <h4>Transmigrasi Patriot</h4>
+                                <p>"Patriot Berkarya, Bangsa Berjaya"</p>
+                            </div>
+                        </div>
+                        <div class="level-item" role="listitem">
+                            <span class="level-number" aria-label="Level 4">4</span>
+                            <div>
+                                <h4>Trans Karya Nusa</h4>
+                                <p>"Kawasan Berkarya, Nusantara Berdaya"</p>
+                            </div>
+                        </div>
+                        <div class="level-item" role="listitem">
+                            <span class="level-number" aria-label="Level 5">5</span>
+                            <div>
+                                <h4>Trans Gotong Royong</h4>
+                                <p>"Bangun Bersama, Sejahtera Semua"</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="backToMenu()" aria-label="Kembali ke menu utama">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i> Kembali
+                </button>
+            </div>
+        </div>
+
+        <!-- Level Selection Screen -->
+        <div id="levelSelection" class="screen" role="dialog" aria-labelledby="level-selection-title">
+            <div class="screen-content">
+                <h2 id="level-selection-title"><i class="fas fa-map" aria-hidden="true"></i> Pilih Level</h2>
+                <div class="levels-grid" role="grid" aria-label="Daftar level permainan">
+                    <div class="level-card" onclick="selectLevel(1)" role="gridcell" tabindex="0" aria-describedby="level-1-desc">
+                        <div class="level-header">
+                            <span class="level-number" aria-label="Level 1">1</span>
+                            <div class="level-stars" id="stars-1" aria-label="Rating bintang level 1"></div>
+                        </div>
+                        <h3>Trans Tuntas (T²)</h3>
+                        <p class="level-slogan">"Tuntas Lahan, Tuntas Harapan"</p>
+                        <p class="level-description" id="level-1-desc">Selesaikan persoalan lahan di kawasan transmigrasi</p>
+                        <div class="level-status" id="status-1">
+                            <i class="fas fa-lock" aria-hidden="true"></i> Belum Dimainkan
+                        </div>
+                    </div>
+
+                    <div class="level-card locked" onclick="selectLevel(2)" role="gridcell" tabindex="0" aria-describedby="level-2-desc">
+                        <div class="level-header">
+                            <span class="level-number" aria-label="Level 2">2</span>
+                            <div class="level-stars" id="stars-2" aria-label="Rating bintang level 2"></div>
+                        </div>
+                        <h3>Transmigrasi Lokal</h3>
+                        <p class="level-slogan">"Dari Lokal, Maju Global"</p>
+                        <p class="level-description" id="level-2-desc">Bangun kota baru dari desa</p>
+                        <div class="level-status" id="status-2">
+                            <i class="fas fa-lock" aria-hidden="true"></i> Terkunci
+                        </div>
+                    </div>
+
+                    <div class="level-card locked" onclick="selectLevel(3)" role="gridcell" tabindex="0" aria-describedby="level-3-desc">
+                        <div class="level-header">
+                            <span class="level-number" aria-label="Level 3">3</span>
+                            <div class="level-stars" id="stars-3" aria-label="Rating bintang level 3"></div>
+                        </div>
+                        <h3>Transmigrasi Patriot</h3>
+                        <p class="level-slogan">"Patriot Berkarya, Bangsa Berjaya"</p>
+                        <p class="level-description" id="level-3-desc">Ciptakan kader pembangunan</p>
+                        <div class="level-status" id="status-3">
+                            <i class="fas fa-lock" aria-hidden="true"></i> Terkunci
+                        </div>
+                    </div>
+
+                    <div class="level-card locked" onclick="selectLevel(4)" role="gridcell" tabindex="0" aria-describedby="level-4-desc">
+                        <div class="level-header">
+                            <span class="level-number" aria-label="Level 4">4</span>
+                            <div class="level-stars" id="stars-4" aria-label="Rating bintang level 4"></div>
+                        </div>
+                        <h3>Trans Karya Nusa</h3>
+                        <p class="level-slogan">"Kawasan Berkarya, Nusantara Berdaya"</p>
+                        <p class="level-description" id="level-4-desc">Kembangkan ekonomi kawasan</p>
+                        <div class="level-status" id="status-4">
+                            <i class="fas fa-lock" aria-hidden="true"></i> Terkunci
+                        </div>
+                    </div>
+
+                    <div class="level-card locked" onclick="selectLevel(5)" role="gridcell" tabindex="0" aria-describedby="level-5-desc">
+                        <div class="level-header">
+                            <span class="level-number" aria-label="Level 5">5</span>
+                            <div class="level-stars" id="stars-5" aria-label="Rating bintang level 5"></div>
+                        </div>
+                        <h3>Trans Gotong Royong</h3>
+                        <p class="level-slogan">"Bangun Bersama, Sejahtera Semua"</p>
+                        <p class="level-description" id="level-5-desc">Kolaborasi multi-pihak</p>
+                        <div class="level-status" id="status-5">
+                            <i class="fas fa-lock" aria-hidden="true"></i> Terkunci
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="backToMenu()" aria-label="Kembali ke menu utama">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i> Kembali ke Menu
+                </button>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="gameScreen" class="screen">
+            <header class="game-header" role="banner">
+                <div class="game-info">
+                    <div class="level-info">
+                        <span id="currentLevelTitle">Level 1: Trans Tuntas</span>
+                        <span id="currentLevelSlogan">"Tuntas Lahan, Tuntas Harapan"</span>
+                    </div>
+                    <div class="game-stats" role="status" aria-live="polite">
+                        <div class="stat" aria-label="Skor saat ini">
+                            <i class="fas fa-coins" aria-hidden="true"></i>
+                            <span id="gameScore">0</span>
+                        </div>
+                        <div class="stat" aria-label="Waktu tersisa">
+                            <i class="fas fa-clock" aria-hidden="true"></i>
+                            <span id="gameTime">05:00</span>
+                        </div>
+                        <div class="stat" aria-label="Nyawa tersisa">
+                            <i class="fas fa-heart" aria-hidden="true"></i>
+                            <span id="gameLives">3</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-small" onclick="pauseGame()" aria-label="Jeda permainan">
+                    <i class="fas fa-pause" aria-hidden="true"></i>
+                </button>
+            </header>
+
+            <main class="game-content">
+                <section class="game-area" aria-label="Area permainan">
+                    <div id="gameCanvas" role="application" aria-label="Kanvas permainan interaktif">
+                        <!-- Game content will be dynamically generated here -->
+                    </div>
+                </section>
+
+                <aside class="game-sidebar" role="complementary">
+                    <section class="mission-panel" aria-labelledby="mission-title">
+                        <h3 id="mission-title"><i class="fas fa-bullseye" aria-hidden="true"></i> Misi</h3>
+                        <div id="missionList" role="list" aria-live="polite">
+                            <!-- Missions will be loaded dynamically -->
+                        </div>
+                    </section>
+
+                    <section class="resources-panel" aria-labelledby="resources-title">
+                        <h3 id="resources-title"><i class="fas fa-boxes" aria-hidden="true"></i> Sumber Daya</h3>
+                        <div id="resourcesList" role="list" aria-live="polite">
+                            <!-- Resources will be loaded dynamically -->
+                        </div>
+                    </section>
+
+                    <section class="actions-panel" aria-labelledby="actions-title">
+                        <h3 id="actions-title"><i class="fas fa-tools" aria-hidden="true"></i> Aksi</h3>
+                        <div id="actionButtons" role="group" aria-label="Tombol aksi permainan">
+                            <!-- Action buttons will be loaded dynamically -->
+                        </div>
+                    </section>
+                </aside>
+            </main>
+        </div>
+
+        <!-- Pause Screen -->
+        <div id="pauseScreen" class="screen overlay" role="dialog" aria-labelledby="pause-title" aria-modal="true">
+            <div class="pause-content">
+                <h2 id="pause-title"><i class="fas fa-pause" aria-hidden="true"></i> Game Dijeda</h2>
+                <nav class="pause-buttons" role="navigation" aria-label="Menu jeda">
+                    <button class="btn btn-primary" onclick="resumeGame()" aria-label="Lanjutkan permainan">
+                        <i class="fas fa-play" aria-hidden="true"></i> Lanjutkan
+                    </button>
+                    <button class="btn btn-secondary" onclick="restartLevel()" aria-label="Mulai ulang level ini">
+                        <i class="fas fa-redo" aria-hidden="true"></i> Mulai Ulang
+                    </button>
+                    <button class="btn btn-secondary" onclick="backToLevelSelection()" aria-label="Kembali ke pemilihan level">
+                        <i class="fas fa-list" aria-hidden="true"></i> Pilih Level
+                    </button>
+                    <button class="btn btn-secondary" onclick="backToMenu()" aria-label="Kembali ke menu utama">
+                        <i class="fas fa-home" aria-hidden="true"></i> Menu Utama
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Level Complete Screen -->
+        <div id="levelCompleteScreen" class="screen overlay" role="dialog" aria-labelledby="complete-title" aria-modal="true">
+            <div class="complete-content">
+                <h2 id="complete-title"><i class="fas fa-trophy" aria-hidden="true"></i> Level Selesai!</h2>
+                <div class="completion-stats" role="status">
+                    <div class="final-score">
+                        <span id="finalScore" aria-label="Skor akhir">0</span>
+                        <p>Poin Total</p>
+                    </div>
+                    <div class="stars-earned" id="starsEarned" aria-label="Bintang yang diperoleh">
+                        <!-- Stars will be shown here -->
+                    </div>
+                    <div class="completion-time">
+                        <span id="completionTime" aria-label="Waktu penyelesaian">00:00</span>
+                        <p>Waktu Selesai</p>
+                    </div>
+                </div>
+                <nav class="completion-buttons" role="navigation" aria-label="Menu setelah menyelesaikan level">
+                    <button class="btn btn-primary" onclick="nextLevel()" aria-label="Lanjut ke level berikutnya">
+                        <i class="fas fa-arrow-right" aria-hidden="true"></i> Level Selanjutnya
+                    </button>
+                    <button class="btn btn-secondary" onclick="restartLevel()" aria-label="Ulangi level ini">
+                        <i class="fas fa-redo" aria-hidden="true"></i> Ulangi Level
+                    </button>
+                    <button class="btn btn-secondary" onclick="backToLevelSelection()" aria-label="Kembali ke pemilihan level">
+                        <i class="fas fa-list" aria-hidden="true"></i> Pilih Level
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="gameOverScreen" class="screen overlay" role="dialog" aria-labelledby="gameover-title" aria-modal="true">
+            <div class="gameover-content">
+                <h2 id="gameover-title"><i class="fas fa-times-circle" aria-hidden="true"></i> Game Over</h2>
+                <p>Jangan menyerah! Coba lagi untuk menyelesaikan misi transmigrasi.</p>
+                <nav class="gameover-buttons" role="navigation" aria-label="Menu game over">
+                    <button class="btn btn-primary" onclick="restartLevel()" aria-label="Coba lagi level ini">
+                        <i class="fas fa-redo" aria-hidden="true"></i> Coba Lagi
+                    </button>
+                    <button class="btn btn-secondary" onclick="backToLevelSelection()" aria-label="Kembali ke pemilihan level">
+                        <i class="fas fa-list" aria-hidden="true"></i> Pilih Level
+                    </button>
+                    <button class="btn btn-secondary" onclick="backToMenu()" aria-label="Kembali ke menu utama">
+                        <i class="fas fa-home" aria-hidden="true"></i> Menu Utama
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen reader only content -->
+    <div class="sr-only">
+        <p>Game Transmigrasi Indonesia - Permainan edukatif tentang program transmigrasi di Indonesia</p>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html> 
